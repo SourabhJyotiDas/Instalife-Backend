@@ -35,7 +35,7 @@ For Backend - npm install or npm i ||
 ( Once install all the packages then start the server by using this commend "npm run start" )
 
 
-For Client/Frontend - cd client > npm install  ( Same goes for here once you install all the packages then start the server by using this commend "npm run start" ) 
+For Client/Frontend - ("https://github.com/SourabhJyotiDas/MERN-Instalife-Complete")
 
 ENJOY 🍉
 
@@ -57,16 +57,8 @@ Please adhere to this project's `code of conduct`.
 
 ## Demo
 
+https://instalife.up.railway.app 🤞
 
-
-https://busy-blue-bear-cuff.cyclic.app 🤞
-## For Production Build
-
-To build this project run ( Remember only in client folder )
-
-```bash
-  npm run build
-```
 
 
 ## Environment Variables
@@ -129,31 +121,6 @@ Install my-project with npm
 ![Logo](https://images.unsplash.com/photo-1537884944318-390069bb8665?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNvZGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60)
 
 
-## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://link-to-project
-```
-
-Go to the project directory
-
-```bash
-  cd client
-```
-
-Install dependencies
-
-```bash
-  npm install
-```
-
-Start the server
-
-```bash
-  npm run start
-```
 
 
 ## Tech Stack
@@ -163,15 +130,6 @@ Start the server
 **Server:** Node, Express
 
 
-## Usage/Examples
-
-```javascript
-import Component from 'my-project'
-
-function App() {
-  return <Component />
-}
-```
 
 
 ## Support

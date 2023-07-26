@@ -1,6 +1,6 @@
-const app = require("./app");
-const { connectToDatabase } = require("./config/database");
-const cloudinary = require("cloudinary")
+import app from "./app.js";
+import { connectToDatabase } from "./config/database.js";
+import cloudinary from "cloudinary"
 
 connectToDatabase()
 

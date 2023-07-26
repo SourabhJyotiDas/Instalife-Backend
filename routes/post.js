@@ -1,6 +1,6 @@
-const express = require("express");
-const { createPost, likeAndUnlikePost, deletePost, getPostOfFollowing, updateCaption, commentOnPost, deleteComment,  exploreallposts, } = require("../controllers/post");
-const { isAuthenticated } = require("../middlewares/auth");
+import express from "express";
+import { createPost, likeAndUnlikePost, deletePost, getPostOfFollowing, updateCaption, commentOnPost, deleteComment, exploreallposts, } from "../controllers/post.js";
+import { isAuthenticated } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -23,5 +23,4 @@ router.route("/post/comment/:id").put(isAuthenticated, commentOnPost);
 router.route("/post/comment/:id").delete(isAuthenticated, deleteComment);
 
 
-
-module.exports = router;
+export default router;

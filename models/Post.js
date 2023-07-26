@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
   caption: String,
@@ -10,18 +10,18 @@ const postSchema = new mongoose.Schema({
 
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Social-Media-User",
+    ref: "User",
   },
 
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  
+
   likes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Social-Media-User",
+      ref: "User",
     },
   ],
 
@@ -29,7 +29,7 @@ const postSchema = new mongoose.Schema({
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Social-Media-User",
+        ref: "User",
       },
       comment: {
         type: String,
@@ -39,4 +39,5 @@ const postSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("Social-Media-Post", postSchema);
+const Post = mongoose.model("Post", postSchema);
+export default Post;

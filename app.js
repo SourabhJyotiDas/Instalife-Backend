@@ -16,22 +16,22 @@ app.use(cookieParser());
 
 
 
-// import path from "path";
-// const __dirname = path.resolve();
+import path from "path";
+const __dirname = path.resolve();
 
-// app.use(express.static(path.join(__dirname, "./client/build")))    // deploy only
-
-// app.get('/', async (req, res) => {
-//    res.sendFile(path.join(__dirname, './client/build/index.html'));
-// });
-
-
-
-
+app.use(express.static(path.join(__dirname, "./client/build")))    // deploy only
 
 app.get('/', async (req, res) => {
-   res.send("<h1>Working Fine</h1>")
+   res.sendFile(path.join(__dirname, './client/build/index.html'));
 });
+
+
+
+
+
+// app.get('/', async (req, res) => {
+//    res.send("<h1>Working Fine</h1>")
+// });
 
 // importing Routes
 import post from "./routes/post.js";

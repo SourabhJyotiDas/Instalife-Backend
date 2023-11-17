@@ -3,6 +3,7 @@ import Post from "../models/Post.js"
 import { sendEmail } from "../middlewares/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
+import { nodeCache } from "../app.js";
 
 export const register = async (req, res) => {
   try {
@@ -27,6 +28,7 @@ export const register = async (req, res) => {
     });
 
     // console.log(user);
+    nodeCache.del("allUsers");
 
     const token = await user.generateToken(); // Generate Random token everytime
 
@@ -131,6 +133,10 @@ export const followUser = async (req, res) => {
       await loggedInUser.save();
       await userToFollow.save();
 
+      nodeCache.del("followingUserPosts");
+      nodeCache.del("myProfileData");
+
+
       res.status(200).json({
         success: true,
         message: "User Unfollowed",
@@ -141,6 +147,9 @@ export const followUser = async (req, res) => {
 
       await loggedInUser.save();
       await userToFollow.save();
+
+      nodeCache.del("followingUserPosts");
+      nodeCache.del("myProfileData");
 
       res.status(200).json({
         success: true,
@@ -180,6 +189,8 @@ export const updatePassword = async (req, res) => {
     user.password = newPassword;
     await user.save();
 
+    nodeCache.del("myProfileData")
+
     res.status(200).json({
       success: true,
       message: "Password Updated",
@@ -217,6 +228,10 @@ export const updateProfile = async (req, res) => {
     }
 
     await user.save();
+
+    nodeCache.del("myProfileData")
+    nodeCache.del("myProfilePosts");
+    nodeCache.del("explorePosts")
 
     res.status(200).json({
       success: true,
@@ -313,9 +328,17 @@ export const deleteMyProfile = async (req, res) => {
 
 export const myProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate(
-      "posts followers following"
-    );
+
+    let user;
+
+    if (nodeCache.has("myProfileData")) {
+      user = JSON.parse(nodeCache.get("myProfileData"))
+    } else {
+      user = await User.findById(req.user._id).populate(
+        "posts followers following"
+      );
+      nodeCache.set("myProfileData", JSON.stringify(user))
+    }
 
     res.status(200).json({
       success: true,
@@ -356,7 +379,8 @@ export const getUserProfile = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({
+
+    let users = await User.find({
       name: { $regex: req.query.name, $options: "i" },
     });
 
@@ -461,17 +485,24 @@ export const resetPassword = async (req, res) => {
 
 export const getMyPosts = async (req, res) => {
   try {
+
+
     const user = await User.findById(req.user._id);
 
-    const posts = [];
+    let posts = [];
 
-    for (let i = 0; i < user.posts.length; i++) {
-      const post = await Post.findById(user.posts[i]).populate(
-        "likes comments.user owner"
-      );
-      posts.push(post);
+    if (nodeCache.has("myProfilePosts")) {
+      posts = JSON.parse(nodeCache.get("myProfilePosts"))
+    } else {
+      for (let i = 0; i < user.posts.length; i++) {
+        const post = await Post.findById(user.posts[i]).populate(
+          "likes comments.user owner"
+        );
+        posts.push(post);
+      }
+      nodeCache.set("myProfilePosts", JSON.stringify(posts))
     }
-
+    
     res.status(200).json({
       success: true,
       posts,

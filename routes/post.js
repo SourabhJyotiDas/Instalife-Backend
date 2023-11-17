@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.route("/post/upload").post(isAuthenticated, createPost);
 
-// router.route("/post/allposts").get(isAuthenticated, exploreallposts);
+router.route("/post/allposts").get(isAuthenticated, exploreallposts);
 
 router.route("/post/:id").get(isAuthenticated, likeAndUnlikePost)
 
@@ -15,6 +15,7 @@ router.route("/post/:id").get(isAuthenticated, likeAndUnlikePost)
 router.route("/posts").get(isAuthenticated, getPostOfFollowing);
 
 router.route("/post/:id").put(isAuthenticated, updateCaption)
+
 router.route("/post/:id").delete(isAuthenticated, deletePost);
 
 

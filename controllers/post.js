@@ -1,7 +1,7 @@
+import { nodeCache } from "../app.js";
 import Post from "../models/Post.js"
 import User from "../models/User.js"
-import cloudinary from "cloudinary"
-
+import cloudinary from "cloudinary";
 
 export const createPost = async (req, res) => {
   try {
@@ -26,6 +26,10 @@ export const createPost = async (req, res) => {
     user.posts.unshift(post._id);
 
     await user.save();
+
+    nodeCache.del("explorePosts");
+    nodeCache.del("myProfileData");
+    nodeCache.del("myProfilePosts");
 
     res.status(201).json({
       success: true,
@@ -68,6 +72,9 @@ export const deletePost = async (req, res) => {
     user.posts.splice(index, 1);
 
     await user.save();
+    nodeCache.del("explorePosts");
+    nodeCache.del("myProfileData");
+    nodeCache.del("myProfilePosts");
 
     res.status(200).json({
       success: true,
@@ -99,6 +106,10 @@ export const likeAndUnlikePost = async (req, res) => {
 
       await post.save();
 
+      nodeCache.del("explorePosts");
+      nodeCache.del("followingUserPosts");
+      nodeCache.del("myProfilePosts");
+
       return res.status(200).json({
         success: true,
         message: "Post Unliked",
@@ -107,6 +118,10 @@ export const likeAndUnlikePost = async (req, res) => {
       post.likes.push(req.user._id);
 
       await post.save();
+
+      nodeCache.del("explorePosts");
+      nodeCache.del("followingUserPosts");
+      nodeCache.del("myProfilePosts");
 
       return res.status(200).json({
         success: true,
@@ -125,7 +140,16 @@ export const getPostOfFollowing = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    const posts = await Post.find({ owner: { $in: user.following, }, }).populate("owner likes comments.user");
+    let posts;
+
+    if (nodeCache.has("followingUserPosts")) {
+      posts = JSON.parse(nodeCache.get("followingUserPosts"))
+    } else {
+      posts = await Post.find({ owner: { $in: user.following, }, }).populate("owner likes comments.user");
+      nodeCache.set("followingUserPosts", JSON.stringify(posts))
+    }
+
+    // const posts = await Post.find({ owner: { $in: user.following, }, }).populate("owner likes comments.user");
 
     res.status(200).json({
       success: true,
@@ -161,6 +185,10 @@ export const updateCaption = async (req, res) => {
     post.caption = req.body.caption;
 
     await post.save();
+
+    nodeCache.del("explorePosts");
+    nodeCache.del("myProfilePosts");
+
     res.status(200).json({
       success: true,
       message: "Post updated",
@@ -184,12 +212,17 @@ export const commentOnPost = async (req, res) => {
       });
     }
 
-    post.comments.push({
+    post.comments.unshift({
       user: req.user._id,
       comment: req.body.comment,
     });
 
     await post.save();
+
+    nodeCache.del("explorePosts");
+    nodeCache.del("followingUserPosts");
+    nodeCache.del("myProfilePosts");
+
     return res.status(200).json({
       success: true,
       message: "Comment added",
@@ -232,6 +265,10 @@ export const deleteComment = async (req, res) => {
 
       await post.save();
 
+      nodeCache.del("explorePosts");
+      nodeCache.del("followingUserPosts");
+      nodeCache.del("myProfilePosts");
+
       return res.status(200).json({
         success: true,
         message: "Selected Comment has deleted",
@@ -244,6 +281,8 @@ export const deleteComment = async (req, res) => {
       });
 
       await post.save();
+
+      nodeCache.del("explorePosts");
 
       return res.status(200).json({
         success: true,
@@ -258,10 +297,17 @@ export const deleteComment = async (req, res) => {
   }
 };
 
-
 export const exploreallposts = async (req, res) => {
   try {
-    const posts = await Post.find().populate("owner likes comments.user");
+
+    let posts;
+
+    if (nodeCache.has("explorePosts")) {
+      posts = JSON.parse(nodeCache.get("explorePosts"))
+    } else {
+      posts = await Post.find({}).populate("owner likes comments.user");
+      nodeCache.set("explorePosts", JSON.stringify(posts))
+    }
 
     res.status(200).json({
       success: true,

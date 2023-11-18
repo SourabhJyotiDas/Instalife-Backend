@@ -1,27 +1,40 @@
 import { nodeCache } from "../app.js";
-import Post from "../models/Post.js"
-import User from "../models/User.js"
+import Post from "../models/Post.js";
+import User from "../models/User.js";
 import cloudinary from "cloudinary";
 
 export const createPost = async (req, res) => {
   try {
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-      folder: "FightClub-posts",
-    });
+    let imagesArr = [];
+
+    if (typeof req.body.images === "String") {
+      imagesArr.push(req.body.images);
+    } else {
+      imagesArr.push(req.body.images);
+    }
+
+    const imagesLinks = [];
+
+    for (let i = 0; i < imagesArr.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(imagesArr[i], {
+        folder: "InstaLife-posts",
+      });
+
+      imagesLinks.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
 
     const newPostData = {
       caption: req.body.caption,
-      image: {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      },
+      images: imagesLinks,
       owner: req.user._id,
     };
 
     const post = await Post.create(newPostData);
 
     const user = await User.findById(req.user._id);
-    // console.log(user);
 
     user.posts.unshift(post._id);
 
@@ -62,7 +75,12 @@ export const deletePost = async (req, res) => {
       });
     }
 
-    await cloudinary.v2.uploader.destroy(post.image.public_id);
+    console.log(post);
+
+    for (let i = 0; i < post.images.length; i++) {
+      const deletableEle = post.images[i];
+      await cloudinary.v2.uploader.destroy(deletableEle.public_id);
+    }
 
     await Post.findByIdAndDelete(req.params.id);
 

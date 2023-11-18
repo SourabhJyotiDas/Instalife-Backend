@@ -3,10 +3,18 @@ import mongoose from "mongoose";
 const postSchema = new mongoose.Schema({
   caption: String,
 
-  image: {
-    public_id: String,
-    url: String,
-  },
+  images: [
+    {
+      public_id: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 
   owner: {
     type: mongoose.Schema.Types.ObjectId,

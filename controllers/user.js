@@ -1,5 +1,5 @@
-import User from "../models/User.js"
-import Post from "../models/Post.js"
+import User from "../models/User.js";
+import Post from "../models/Post.js";
 import { sendEmail } from "../middlewares/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
@@ -96,6 +96,10 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
+    nodeCache.del("followingUserPosts");
+    nodeCache.del("myProfileData");
+    nodeCache.del("explorePosts");
+    nodeCache.del("myProfilePosts");
     res
       .status(200)
       .cookie("token", null, { expires: new Date(Date.now()), httpOnly: true })
@@ -502,7 +506,7 @@ export const getMyPosts = async (req, res) => {
       }
       nodeCache.set("myProfilePosts", JSON.stringify(posts))
     }
-    
+
     res.status(200).json({
       success: true,
       posts,

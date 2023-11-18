@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import dotenv from "dotenv";
+import fileUpload from "express-fileupload";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
+app.use(fileUpload());
 
 import NodeCache from "node-cache";
 
@@ -26,9 +28,6 @@ app.use(express.static(path.join(__dirname, "./client/build")))    // deploy onl
 app.get('/', async (req, res) => {
    res.sendFile(path.join(__dirname, './client/build/index.html'));
 });
-
-
-
 
 
 // app.get('/', async (req, res) => {

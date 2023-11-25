@@ -13,10 +13,4 @@
       "dest": "/server.js"
     }
   ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "DESTINATION": "/"
-    }
-  ]
 }

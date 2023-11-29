@@ -257,6 +257,8 @@ export const deleteMyProfile = async (req, res) => {
     res.cookie("token", null, {
       expires: new Date(Date.now()),
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
     });
 
     // Delete all posts of the user

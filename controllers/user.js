@@ -35,6 +35,8 @@ export const register = async (req, res) => {
     const options = {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       httpOnly: true,
+      secure: false,
+      sameSite: "none",
     };
 
     res.status(201).cookie("token", token, options).json({
@@ -78,6 +80,8 @@ export const login = async (req, res) => {
     const options = {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       httpOnly: true,
+      secure: false,
+      sameSite: "none",
     };
 
     res.status(200).cookie("token", token, options).json({
@@ -100,9 +104,17 @@ export const logout = async (req, res) => {
     nodeCache.del("myProfileData");
     nodeCache.del("explorePosts");
     nodeCache.del("myProfilePosts");
+
+    const options = {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    };
+
     res
       .status(200)
-      .cookie("token", null, { expires: new Date(Date.now()), httpOnly: true })
+      .cookie("token", null, options)
       .json({
         success: true,
         message: "Logged out",

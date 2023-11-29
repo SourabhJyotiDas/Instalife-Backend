@@ -14,7 +14,6 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.35.0",
-    "concurrently": "^7.6.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -22,10 +21,7 @@
     "express-fileupload": "^1.4.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
-    "node-cache": "^5.1.2",
     "nodemailer": "^6.9.1",
-    "nodemon": "^2.0.21",
-    "react-multi-carousel": "^2.8.2",
-    "start": "^5.1.0"
+    "nodemon": "^2.0.21"
   }
 }

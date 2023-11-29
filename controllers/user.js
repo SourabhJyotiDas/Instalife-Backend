@@ -3,7 +3,6 @@ import Post from "../models/Post.js";
 import { sendEmail } from "../middlewares/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
-import { nodeCache } from "../app.js";
 
 export const register = async (req, res) => {
   try {
@@ -26,9 +25,6 @@ export const register = async (req, res) => {
       password,
       avatar: { public_id: myCloud.public_id, url: myCloud.secure_url },
     });
-
-    // console.log(user);
-    nodeCache.del("allUsers");
 
     const token = await user.generateToken(); // Generate Random token everytime
 
@@ -100,11 +96,6 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    nodeCache.del("followingUserPosts");
-    nodeCache.del("myProfileData");
-    nodeCache.del("explorePosts");
-    nodeCache.del("myProfilePosts");
-
     const options = {
       expires: new Date(Date.now()),
       httpOnly: true,
@@ -244,10 +235,6 @@ export const updateProfile = async (req, res) => {
     }
 
     await user.save();
-
-    nodeCache.del("myProfileData")
-    nodeCache.del("myProfilePosts");
-    nodeCache.del("explorePosts")
 
     res.status(200).json({
       success: true,

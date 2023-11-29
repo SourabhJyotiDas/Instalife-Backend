@@ -9,6 +9,11 @@ const app = express();
 dotenv.config({ path: "config/config.env" });
 
 // Using Middlewares
+
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(cookieParser());
+app.use(fileUpload());
 app.use(
    cors({
      credentials: true,
@@ -16,15 +21,6 @@ app.use(
      methods: ["GET", "POST", "PUT", "DELETE"],
    })
  );
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-app.use(cookieParser());
-app.use(fileUpload());
-
-
-import NodeCache from "node-cache";
-
-export const nodeCache = new NodeCache();
 
 
 app.get('/', async (req, res) => {

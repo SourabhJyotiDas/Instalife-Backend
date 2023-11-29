@@ -1,4 +1,3 @@
-import { nodeCache } from "../app.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import cloudinary from "cloudinary";
@@ -39,10 +38,6 @@ export const createPost = async (req, res) => {
     user.posts.unshift(post._id);
 
     await user.save();
-
-    nodeCache.del("explorePosts");
-    nodeCache.del("myProfileData");
-    nodeCache.del("myProfilePosts");
 
     res.status(201).json({
       success: true,
@@ -90,9 +85,6 @@ export const deletePost = async (req, res) => {
     user.posts.splice(index, 1);
 
     await user.save();
-    nodeCache.del("explorePosts");
-    nodeCache.del("myProfileData");
-    nodeCache.del("myProfilePosts");
 
     res.status(200).json({
       success: true,
@@ -124,10 +116,6 @@ export const likeAndUnlikePost = async (req, res) => {
 
       await post.save();
 
-      nodeCache.del("explorePosts");
-      nodeCache.del("followingUserPosts");
-      nodeCache.del("myProfilePosts");
-
       return res.status(200).json({
         success: true,
         message: "Post Unliked",
@@ -136,10 +124,6 @@ export const likeAndUnlikePost = async (req, res) => {
       post.likes.push(req.user._id);
 
       await post.save();
-
-      nodeCache.del("explorePosts");
-      nodeCache.del("followingUserPosts");
-      nodeCache.del("myProfilePosts");
 
       return res.status(200).json({
         success: true,

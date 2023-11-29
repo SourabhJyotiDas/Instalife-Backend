@@ -28,7 +28,7 @@ export const register = async (req, res) => {
 
     const token = await user.generateToken(); // Generate Random token everytime
 
-    
+
     const options = {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       httpOnly: true,
@@ -141,10 +141,6 @@ export const followUser = async (req, res) => {
       await loggedInUser.save();
       await userToFollow.save();
 
-      nodeCache.del("followingUserPosts");
-      nodeCache.del("myProfileData");
-
-
       res.status(200).json({
         success: true,
         message: "User Unfollowed",
@@ -155,9 +151,6 @@ export const followUser = async (req, res) => {
 
       await loggedInUser.save();
       await userToFollow.save();
-
-      nodeCache.del("followingUserPosts");
-      nodeCache.del("myProfileData");
 
       res.status(200).json({
         success: true,
@@ -196,8 +189,6 @@ export const updatePassword = async (req, res) => {
 
     user.password = newPassword;
     await user.save();
-
-    nodeCache.del("myProfileData")
 
     res.status(200).json({
       success: true,
@@ -333,16 +324,9 @@ export const deleteMyProfile = async (req, res) => {
 export const myProfile = async (req, res) => {
   try {
 
-    let user;
-
-    if (nodeCache.has("myProfileData")) {
-      user = JSON.parse(nodeCache.get("myProfileData"))
-    } else {
-      user = await User.findById(req.user._id).populate(
-        "posts followers following"
-      );
-      nodeCache.set("myProfileData", JSON.stringify(user))
-    }
+    let user = await User.findById(req.user._id).populate(
+      "posts followers following"
+    );
 
     res.status(200).json({
       success: true,
@@ -495,16 +479,11 @@ export const getMyPosts = async (req, res) => {
 
     let posts = [];
 
-    if (nodeCache.has("myProfilePosts")) {
-      posts = JSON.parse(nodeCache.get("myProfilePosts"))
-    } else {
-      for (let i = 0; i < user.posts.length; i++) {
-        const post = await Post.findById(user.posts[i]).populate(
-          "likes comments.user owner"
-        );
-        posts.push(post);
-      }
-      nodeCache.set("myProfilePosts", JSON.stringify(posts))
+    for (let i = 0; i < user.posts.length; i++) {
+      const post = await Post.findById(user.posts[i]).populate(
+        "likes comments.user owner"
+      );
+      posts.push(post);
     }
 
     res.status(200).json({

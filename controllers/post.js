@@ -142,16 +142,7 @@ export const getPostOfFollowing = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    let posts;
-
-    if (nodeCache.has("followingUserPosts")) {
-      posts = JSON.parse(nodeCache.get("followingUserPosts"))
-    } else {
-      posts = await Post.find({ owner: { $in: user.following, }, }).populate("owner likes comments.user");
-      nodeCache.set("followingUserPosts", JSON.stringify(posts))
-    }
-
-    // const posts = await Post.find({ owner: { $in: user.following, }, }).populate("owner likes comments.user");
+    const posts = await Post.find({ owner: { $in: user.following, }, }).populate("owner likes comments.user");
 
     res.status(200).json({
       success: true,
@@ -188,9 +179,6 @@ export const updateCaption = async (req, res) => {
 
     await post.save();
 
-    nodeCache.del("explorePosts");
-    nodeCache.del("myProfilePosts");
-
     res.status(200).json({
       success: true,
       message: "Post updated",
@@ -220,10 +208,6 @@ export const commentOnPost = async (req, res) => {
     });
 
     await post.save();
-
-    nodeCache.del("explorePosts");
-    nodeCache.del("followingUserPosts");
-    nodeCache.del("myProfilePosts");
 
     return res.status(200).json({
       success: true,
@@ -267,10 +251,6 @@ export const deleteComment = async (req, res) => {
 
       await post.save();
 
-      nodeCache.del("explorePosts");
-      nodeCache.del("followingUserPosts");
-      nodeCache.del("myProfilePosts");
-
       return res.status(200).json({
         success: true,
         message: "Selected Comment has deleted",
@@ -283,8 +263,6 @@ export const deleteComment = async (req, res) => {
       });
 
       await post.save();
-
-      nodeCache.del("explorePosts");
 
       return res.status(200).json({
         success: true,
@@ -302,14 +280,7 @@ export const deleteComment = async (req, res) => {
 export const exploreallposts = async (req, res) => {
   try {
 
-    let posts;
-
-    if (nodeCache.has("explorePosts")) {
-      posts = JSON.parse(nodeCache.get("explorePosts"))
-    } else {
-      posts = await Post.find({}).populate("owner likes comments.user");
-      nodeCache.set("explorePosts", JSON.stringify(posts))
-    }
+    let  posts = await Post.find({}).populate("owner likes comments.user");
 
     res.status(200).json({
       success: true,

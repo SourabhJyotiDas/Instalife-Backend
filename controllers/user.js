@@ -28,10 +28,11 @@ export const register = async (req, res) => {
 
     const token = await user.generateToken(); // Generate Random token everytime
 
+    
     const options = {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       httpOnly: true,
-      secure: false,
+      secure: true, // Set this to true when using SameSite=None
       sameSite: "none",
     };
 
@@ -76,7 +77,7 @@ export const login = async (req, res) => {
     const options = {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       httpOnly: true,
-      secure: false,
+      secure: true, // Set this to true when using SameSite=None
       sameSite: "none",
     };
 

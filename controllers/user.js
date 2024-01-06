@@ -4,6 +4,46 @@ import { sendEmail } from "../middlewares/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
 
+export const getMyProfile = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id).populate(
+      "posts followers following"
+    );
+
+    res.status(200).json({
+      success: true,
+      controller: "getmyProfile",
+      user
+    });
+  } catch (error) {
+    res.status(200).json({
+      success: false,
+      controller: "getmyProfile",
+      error: error.message
+    });
+  }
+};
+
+export const googleLogout = async (req, res) => {
+  try {
+    await req.session.destroy((err) => {
+      if (err) return next(err);
+      res.clearCookie("connect.sid");
+      res.status(200).json({
+        message: "Logged Out",
+      });
+    });
+
+  } catch (error) {
+    res.status(200).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
+
+// //////////////////////////////////////////////////////////////////
+
 export const register = async (req, res) => {
   try {
     const { name, email, password, avatar } = req.body;
@@ -16,7 +56,7 @@ export const register = async (req, res) => {
     }
 
     const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-      folder: "FightClub-avatars",
+      folder: "instalife-avatars",
     });
 
     user = await User.create({
@@ -97,6 +137,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
+
     const options = {
       expires: new Date(Date.now()),
       httpOnly: true,
@@ -220,7 +261,7 @@ export const updateProfile = async (req, res) => {
       await cloudinary.v2.uploader.destroy(user.avatar.public_id);
 
       const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-        folder: "FightClub-avatars",
+        folder: "instalife-avatars",
       });
       user.avatar.public_id = myCloud.public_id;
       user.avatar.url = myCloud.secure_url;

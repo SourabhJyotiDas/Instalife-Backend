@@ -41,8 +41,6 @@ export const createPost = async (req, res) => {
     user.avatar.public_id = myCloud.public_id;
     user.avatar.url = myCloud.secure_url;
 
-   
-
     const post = await Post.create(newPostData);
 
     const user = await User.findById(req.user._id);

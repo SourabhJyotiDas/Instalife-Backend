@@ -25,22 +25,21 @@ export const createPost = async (req, res) => {
     //   });
     // }
 
-    const post = await Post.create(newPostData);
-
-    const user = await User.findById(req.user._id);
-
     const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
       folder: "instalife-posts",
     });
-    user.avatar.public_id = myCloud.public_id;
-    user.avatar.url = myCloud.secure_url;
-
-
     const newPostData = {
       caption: req.body.caption,
-      image: req.body.image,
+      image: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
       owner: req.user._id,
     };
+
+    const user = await User.findById(req.user._id);
+
+    const post = await Post.create(newPostData);
 
     user.posts.unshift(post._id);
 

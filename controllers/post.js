@@ -4,16 +4,6 @@ import cloudinary from "cloudinary";
 
 export const createPost = async (req, res) => {
   try {
-    // if (avatar) {
-    //   await cloudinary.v2.uploader.destroy(user.avatar.public_id);
-
-    //   const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-    //     folder: "instalife-avatars",
-    //   });
-    //   user.avatar.public_id = myCloud.public_id;
-    //   user.avatar.url = myCloud.secure_url;
-    // }
-
     // let imagesArr = [];
 
     // if (typeof req.body.images === "String") {
@@ -35,15 +25,16 @@ export const createPost = async (req, res) => {
     //   });
     // }
 
+    const post = await Post.create(newPostData);
+
+    const user = await User.findById(req.user._id);
+
     const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
       folder: "instalife-posts",
     });
     user.avatar.public_id = myCloud.public_id;
     user.avatar.url = myCloud.secure_url;
 
-    const post = await Post.create(newPostData);
-
-    const user = await User.findById(req.user._id);
 
     const newPostData = {
       caption: req.body.caption,

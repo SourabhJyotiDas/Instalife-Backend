@@ -4,30 +4,46 @@ import cloudinary from "cloudinary";
 
 export const createPost = async (req, res) => {
   try {
-    let imagesArr = [];
+    // if (avatar) {
+    //   await cloudinary.v2.uploader.destroy(user.avatar.public_id);
 
-    if (typeof req.body.images === "String") {
-      imagesArr.push(req.body.images);
-    } else {
-      imagesArr.push(req.body.images);
-    }
+    //   const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+    //     folder: "instalife-avatars",
+    //   });
+    //   user.avatar.public_id = myCloud.public_id;
+    //   user.avatar.url = myCloud.secure_url;
+    // }
 
-    const imagesLinks = [];
+    // let imagesArr = [];
 
-    for (let i = 0; i < imagesArr.length; i++) {
-      const result = await cloudinary.v2.uploader.upload(imagesArr[i], {
-        folder: "InstaLife-posts",
-      });
+    // if (typeof req.body.images === "String") {
+    //   imagesArr.push(req.body.images);
+    // } else {
+    //   imagesArr.push(req.body.images);
+    // }
 
-      imagesLinks.push({
-        public_id: result.public_id,
-        url: result.secure_url,
-      });
-    }
+    // const imagesLinks = [];
+
+    // for (let i = 0; i < imagesArr.length; i++) {
+    //   const result = await cloudinary.v2.uploader.upload(imagesArr[i], {
+    //     folder: "InstaLife-posts",
+    //   });
+
+    //   imagesLinks.push({
+    //     public_id: result.public_id,
+    //     url: result.secure_url,
+    //   });
+    // }
+
+    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+      folder: "instalife-posts",
+    });
+    user.avatar.public_id = myCloud.public_id;
+    user.avatar.url = myCloud.secure_url;
 
     const newPostData = {
       caption: req.body.caption,
-      images: imagesLinks,
+      image: req.body.image,
       owner: req.user._id,
     };
 
@@ -280,7 +296,7 @@ export const deleteComment = async (req, res) => {
 export const exploreallposts = async (req, res) => {
   try {
 
-    let  posts = await Post.find({}).populate("owner likes comments.user");
+    let posts = await Post.find({}).populate("owner likes comments.user");
 
     res.status(200).json({
       success: true,

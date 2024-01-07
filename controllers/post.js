@@ -35,7 +35,7 @@ export const createPost = async (req, res) => {
     //   });
     // }
 
-    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
       folder: "instalife-posts",
     });
     user.avatar.public_id = myCloud.public_id;

@@ -76,14 +76,9 @@ export const deletePost = async (req, res) => {
       });
     }
 
-    console.log(post);
+    await cloudinary.v2.uploader.destroy(post.image.public_id);
 
-    for (let i = 0; i < post.images.length; i++) {
-      const deletableEle = post.images[i];
-      await cloudinary.v2.uploader.destroy(deletableEle.public_id);
-    }
-
-    await Post.findByIdAndDelete(req.params.id);
+    await post.remove();
 
     const user = await User.findById(req.user._id);
 

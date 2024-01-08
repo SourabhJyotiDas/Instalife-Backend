@@ -29,10 +29,25 @@ export const googleLogout = async (req, res) => {
     await req.session.destroy((err) => {
       if (err) return next(err);
       res.clearCookie("connect.sid");
-      res.status(200).json({
-        message: "Logged Out",
-      });
+      const options = {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      };
+  
+      res
+        .status(200)
+        .cookie("connect.sid", null, options)
+        .json({
+          success: true,
+          message: "Logged out",
+        });
     });
+
+
+  
+
 
   } catch (error) {
     res.status(200).json({

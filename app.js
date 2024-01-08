@@ -17,11 +17,11 @@ app.use(
       secret: "mySecret",
       resave: false,
       saveUninitialized: false,
-      // cookie: {
-      //    secure: true,
-      //    httpOnly: true,
-      //    sameSite: "none",
-      // },
+      cookie: {
+         secure: true,
+         httpOnly: true,
+         sameSite: "none",
+      },
    })
 );
 

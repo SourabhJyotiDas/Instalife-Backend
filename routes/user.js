@@ -1,7 +1,7 @@
 import express from "express";
-import { register, login, followUser, logout, updatePassword, updateProfile, deleteMyProfile, myProfile, getUserProfile, getAllUsers, forgotPassword, resetPassword, getMyPosts, getUserPosts, getMyProfile, googleLogout, } from "../controllers/user.js";
-import { isAuthenticated, isGoogleAuthenticated } from "../middlewares/auth.js";
 import passport from "passport";
+import { deleteMyProfile, followUser, forgotPassword, getAllUsers, getMyPosts, getMyProfile, getUserPosts, getUserProfile, googleLogout, login, register, resetPassword, updatePassword, updateProfile } from "../controllers/user.js";
+import { isAuthenticated } from "../middlewares/auth.js";
 
 
 const router = express.Router();
@@ -27,9 +27,7 @@ router.route("/register").post(register);
 
 router.route("/login").post(login);
 
-router.route("/logout").get(logout);
-
-router.route("/googlelogout").get(googleLogout);
+router.route("/logout").get(googleLogout);
 
 router.route("/follow/:id").get(isAuthenticated , followUser);
 

@@ -364,24 +364,24 @@ export const deleteMyProfile = async (req, res) => {
   }
 };
 
-export const myProfile = async (req, res) => {
-  try {
+// export const myProfile = async (req, res) => {
+//   try {
 
-    let user = await User.findById(req.user._id).populate(
-      "posts followers following"
-    );
+//     let user = await User.findById(req.user._id).populate(
+//       "posts followers following"
+//     );
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 
 export const getUserProfile = async (req, res) => {
   try {

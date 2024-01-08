@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
 import session from "express-session";
 import passport from "passport";
+import { connectPassport } from "./utils/Provider.js";
 
 const app = express();
 
@@ -16,11 +17,11 @@ app.use(
       secret: "mySecret",
       resave: false,
       saveUninitialized: false,
-      cookie: {
-         secure: true,
-         httpOnly: true,
-         sameSite: "none",
-      },
+      // cookie: {
+      //    secure: true,
+      //    httpOnly: true,
+      //    sameSite: "none",
+      // },
    })
 );
 
@@ -52,7 +53,6 @@ app.get('/', async (req, res) => {
 // importing Routes
 import post from "./routes/post.js";
 import user from "./routes/user.js";
-import { connectPassport } from "./utils/Provider.js";
 
 // usign Routes
 app.use("/api/v1", post)

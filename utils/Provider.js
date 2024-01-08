@@ -9,6 +9,7 @@ export const connectPassport = () => {
         clientID: "915692287850-pcee4mbb0sfigrnb1mjikjnf0gik91ht.apps.googleusercontent.com",
         clientSecret: "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",
         callbackURL: "https://instalife.vercel.app/api/v1/login",
+        // callbackURL: "http://localhost:5000/api/v1/login",
       },
       async function (accessToken, refreshToken, profile, done) {
 

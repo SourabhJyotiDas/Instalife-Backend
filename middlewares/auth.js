@@ -28,17 +28,3 @@ export const isAuthenticated = async (req, res, next) => {
     });
   }
 };
-
-
-export const isGoogleAuthenticated = async (req, res, next) => {
-  //   try {
-  //     const token = req.cookies["connect.sid"];
-
-  //     if (!token) {
-  //       return next(new ErrorHandler("Not Logged In", 401));
-  //     }
-  //     next();
-  //   } catch (error) {
-  //     return next(new ErrorHandler(error.message, 401));
-  //   }
-}

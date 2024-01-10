@@ -16,8 +16,8 @@ router.get(
 router.get(
    "/login",
    passport.authenticate("google", {
-      // successRedirect: "http://localhost:3000",
-        successRedirect: "https://instalife-in.netlify.app",
+      successRedirect: "http://localhost:3000",
+      //   successRedirect: "https://instalife-in.netlify.app",
    })
 );
 

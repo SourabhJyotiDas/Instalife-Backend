@@ -14,13 +14,11 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(fileUpload());
 
-const corsOptions = {
+app.use(cors({
    credentials: true,
    origin: ['https://instalife-in.netlify.app', 'http://localhost:3000'],
    methods: ["GET", "POST", "PUT", "DELETE"],
-};
-
-app.use(cors(corsOptions));
+}));
 
 
 app.get('/', async (req, res) => {

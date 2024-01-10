@@ -99,16 +99,18 @@ export const logout = async (req, res) => {
   try {
 
     res
-      .status(200)
-      .cookie("token", null, {
-        expires: new Date(Date.now()), httpOnly: true,
+    .status(200)
+    .cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
         secure: true, // Set this to true when using SameSite=None
         sameSite: "none",
       })
-      .json({
-        success: true,
-        message: "Logged out",
-      });
+          .json({
+            success: true,
+            message: "User Deleted Successfully",
+          });
+});
 
   } catch (error) {
     res.status(500).json({

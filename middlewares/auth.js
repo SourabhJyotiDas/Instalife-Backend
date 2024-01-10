@@ -1,18 +1,14 @@
 
 export const isAuthenticated = async (req, res, next) => {
   try {
-
-    const googletoken = req.cookies["connect.sid"];
-
-    if (googletoken) {
-      return next()
+    const token = req.cookies["connect.sid"];
+    if (!token) {
+      return res.status(500).json({
+        success: false,
+        message: "Not LogedIn",
+      });
     }
-
-    return res.status(500).json({
-      success: false,
-      message: "Login First",
-    });
-
+    next();
   } catch (error) {
     res.status(500).json({
       message: error.message,

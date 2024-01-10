@@ -2,7 +2,7 @@ import app from "./app.js";
 import { connectToDatabase } from "./config/database.js";
 import cloudinary from "cloudinary"
 
-connectToDatabase()
+connectToDatabase();
 
 cloudinary.config({
    cloud_name: process.env.CLOUDINARY_NAME,

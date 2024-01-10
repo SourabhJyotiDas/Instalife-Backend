@@ -3,35 +3,12 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
-import session from "express-session";
-import passport from "passport";
-import { connectPassport } from "./utils/Provider.js";
 
 const app = express();
 
 dotenv.config({ path: "config/config.env" });
 
 // Using Middlewares
-app.use(
-   session({
-      secret: "mySecret",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-         secure: true,
-         httpOnly: true,
-         sameSite: "none",
-      },
-   })
-);
-
-connectPassport();
-
-app.use(passport.session());
-app.use(passport.authenticate("session"));
-app.use(passport.initialize());
-app.enable("trust proxy");
-
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));

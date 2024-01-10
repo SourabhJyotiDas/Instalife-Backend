@@ -4,61 +4,6 @@ import { sendEmail } from "../middlewares/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
 
-export const getMyProfile = async (req, res) => {
-  try {
-    let user = await User.findById(req.user._id).populate(
-      "posts followers following"
-    );
-
-    res.status(200).json({
-      success: true,
-      controller: "getmyProfile",
-      user
-    });
-  } catch (error) {
-    res.status(200).json({
-      success: false,
-      controller: "getmyProfile",
-      error: error.message
-    });
-  }
-};
-
-export const googleLogout = async (req, res) => {
-  try {
-    await req.session.destroy((err) => {
-      if (err) return next(err);
-      res.clearCookie("connect.sid");
-      const options = {
-        expires: new Date(Date.now()),
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      };
-  
-      res
-        .status(200)
-        .cookie("connect.sid", null, options)
-        .json({
-          success: true,
-          message: "Logged out",
-        });
-    });
-
-
-  
-
-
-  } catch (error) {
-    res.status(200).json({
-      success: false,
-      error: error.message
-    });
-  }
-};
-
-// //////////////////////////////////////////////////////////////////
-
 export const register = async (req, res) => {
   try {
     const { name, email, password, avatar } = req.body;
@@ -167,6 +112,24 @@ export const logout = async (req, res) => {
         success: true,
         message: "Logged out",
       });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const myProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate(
+      "posts followers following"
+    );
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -379,25 +342,6 @@ export const deleteMyProfile = async (req, res) => {
   }
 };
 
-// export const myProfile = async (req, res) => {
-//   try {
-
-//     let user = await User.findById(req.user._id).populate(
-//       "posts followers following"
-//     );
-
-//     res.status(200).json({
-//       success: true,
-//       user,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
 export const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).populate(
@@ -531,8 +475,6 @@ export const resetPassword = async (req, res) => {
 
 export const getMyPosts = async (req, res) => {
   try {
-
-
     const user = await User.findById(req.user._id);
 
     let posts = [];

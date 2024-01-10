@@ -4,7 +4,6 @@ import { isAuthenticated } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-
 router.route("/post/upload").post(isAuthenticated, createPost);
 
 router.route("/post/allposts").get(isAuthenticated, exploreallposts);

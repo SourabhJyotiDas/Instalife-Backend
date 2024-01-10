@@ -1,49 +1,31 @@
 import express from "express";
-import passport from "passport";
-import { deleteMyProfile, followUser, forgotPassword, getAllUsers, getMyPosts, getMyProfile, getUserPosts, getUserProfile, googleLogout, login, register, resetPassword, updatePassword, updateProfile } from "../controllers/user.js";
+import { deleteMyProfile, followUser, forgotPassword, getAllUsers, getMyPosts, getUserPosts, getUserProfile, login, logout, myProfile, register, resetPassword, updatePassword, updateProfile } from "../controllers/user.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
 
 const router = express.Router();
 
-router.get(
-   "/googlelogin",
-   passport.authenticate("google", {
-      scope: ["profile"],
-   })
-);
-
-router.get(
-   "/login",
-   passport.authenticate("google", {
-      successRedirect: "http://localhost:3000",
-      //   successRedirect: "https://instalife-in.netlify.app",
-   })
-);
-
-router.get("/me",  isAuthenticated, getMyProfile);
-
 router.route("/register").post(register);
 
 router.route("/login").post(login);
 
-router.route("/logout").get(googleLogout);
+router.route("/logout").get(logout);
 
-router.route("/follow/:id").get(isAuthenticated , followUser);
-
-router.route("/update/password").put(isAuthenticated , updatePassword);
+router.route("/me").get(isAuthenticated , myProfile);
 
 router.route("/update/profile").put(isAuthenticated , updateProfile);
 
-router.route("/delete/me").delete(isAuthenticated , deleteMyProfile);
+router.route("/update/password").put(isAuthenticated , updatePassword);
 
-// router.route("/me").get(isAuthenticated , myProfile);
+router.route("/delete/me").delete(isAuthenticated , deleteMyProfile);
 
 router.route("/my/posts").get(isAuthenticated , getMyPosts);
 
-router.route("/userposts/:id").get(isAuthenticated , getUserPosts);
+router.route("/follow/:id").get(isAuthenticated , followUser);
 
 router.route("/user/:id").get(isAuthenticated , getUserProfile);
+
+router.route("/userposts/:id").get(isAuthenticated , getUserPosts);
 
 router.route("/users").get(isAuthenticated , getAllUsers);
 

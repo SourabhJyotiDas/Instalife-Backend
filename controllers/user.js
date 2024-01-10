@@ -98,20 +98,18 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
 
-    const options = {
-      expires: new Date(Date.now()),
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    };
-
     res
       .status(200)
-      .cookie("token", null, options)
+      .cookie("token", null, {
+        expires: new Date(Date.now()), httpOnly: true,
+        secure: true, // Set this to true when using SameSite=None
+        sameSite: "none",
+      })
       .json({
         success: true,
         message: "Logged out",
       });
+
   } catch (error) {
     res.status(500).json({
       success: false,

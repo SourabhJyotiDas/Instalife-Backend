@@ -1,33 +1,16 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import cloudinary from "cloudinary";
+import sharp from 'sharp';
+import multer from 'multer';
 
 export const createPost = async (req, res) => {
   try {
-    // let imagesArr = [];
-
-    // if (typeof req.body.images === "String") {
-    //   imagesArr.push(req.body.images);
-    // } else {
-    //   imagesArr.push(req.body.images);
-    // }
-
-    // const imagesLinks = [];
-
-    // for (let i = 0; i < imagesArr.length; i++) {
-    //   const result = await cloudinary.v2.uploader.upload(imagesArr[i], {
-    //     folder: "InstaLife-posts",
-    //   });
-
-    //   imagesLinks.push({
-    //     public_id: result.public_id,
-    //     url: result.secure_url,
-    //   });
-    // }
 
     const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-      folder: "instalife-posts",
+      folder: 'instalife-posts',
     });
+
     const newPostData = {
       caption: req.body.caption,
       image: {
@@ -47,9 +30,8 @@ export const createPost = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Post created",
+      message: 'Post created',
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -78,7 +60,7 @@ export const deletePost = async (req, res) => {
 
     await cloudinary.v2.uploader.destroy(post.image.public_id);
 
-    await post.remove();
+    await Post.findByIdAndDelete(post)
 
     const user = await User.findById(req.user._id);
 

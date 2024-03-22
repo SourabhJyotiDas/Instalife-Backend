@@ -1,15 +1,18 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import cloudinary from "cloudinary";
-import sharp from 'sharp';
-import multer from 'multer';
+import getDataUri from "../utils/dataUri.js";
 
 export const createPost = async (req, res) => {
   try {
 
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-      folder: 'instalife-posts',
-    });
+    const file = req.file;
+
+    const fileUri = getDataUri(file);
+
+    const myCloud = await cloudinary.v2.uploader.upload(fileUri.content, {
+      folder: "instalife-posts",
+   });
 
     const newPostData = {
       caption: req.body.caption,

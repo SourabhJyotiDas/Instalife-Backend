@@ -3,10 +3,11 @@ import Post from "../models/Post.js";
 import { sendEmail } from "../middlewares/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
+import getDataUri from "../utils/dataUri.js";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, avatar } = req.body;
+    const { name, email, password } = req.body;
 
     let user = await User.findOne({ email });
     if (user) {
@@ -15,9 +16,14 @@ export const register = async (req, res) => {
         .json({ success: false, message: "User already exists" });
     }
 
-    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+    const file = req.file;
+
+    const fileUri = getDataUri(file);
+
+    const myCloud = await cloudinary.v2.uploader.upload(fileUri.content, {
       folder: "instalife-avatars",
-    });
+      width: 500, height: 500, gravity: "faces", crop: "fill" ,quality: 100
+   });
 
     user = await User.create({
       name,
@@ -223,7 +229,7 @@ export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    const { name, email, avatar } = req.body;
+    const { name, email} = req.body;
 
     if (name) {
       user.name = name;
@@ -233,12 +239,20 @@ export const updateProfile = async (req, res) => {
       user.email = email;
     }
 
-    if (avatar) {
+   
+
+    if (req.file) {
       await cloudinary.v2.uploader.destroy(user.avatar.public_id);
 
-      const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+      const file = req.file;
+
+      const fileUri = getDataUri(file);
+  
+      const myCloud = await cloudinary.v2.uploader.upload(fileUri.content, {
         folder: "instalife-avatars",
-      });
+        width: 500, height: 500, gravity: "faces", crop: "fill" ,quality: 100
+     });
+
       user.avatar.public_id = myCloud.public_id;
       user.avatar.url = myCloud.secure_url;
     }

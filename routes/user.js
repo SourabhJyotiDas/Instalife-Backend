@@ -1,11 +1,12 @@
 import express from "express";
 import { deleteMyProfile, followUser, forgotPassword, getAllUsers, getMyPosts, getUserPosts, getUserProfile, login, logout, myProfile, register, resetPassword, updatePassword, updateProfile } from "../controllers/user.js";
 import { isAuthenticated } from "../middlewares/auth.js";
+import singleUpload from "../middlewares/multer.js";
 
 
 const router = express.Router();
 
-router.route("/register").post(register);
+router.route("/register").post(singleUpload,register);
 
 router.route("/login").post(login);
 
@@ -13,7 +14,7 @@ router.route("/logout").get(logout);
 
 router.route("/me").get(isAuthenticated , myProfile);
 
-router.route("/update/profile").put(isAuthenticated , updateProfile);
+router.route("/update/profile").put(singleUpload,isAuthenticated , updateProfile);
 
 router.route("/update/password").put(isAuthenticated , updatePassword);
 
